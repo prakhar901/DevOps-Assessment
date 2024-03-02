@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: git-clone
+spec:
+  steps:
+    - name: git-clone
+      image: alpine/git
+      args:
+        - clone
+        - <repository_url>
+        - /workspace/source
+
+---
+
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-and-push
+spec:
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:v1.6.0
+      args:
+        - --destination=<docker_hub_repo>:<tag>
+        - --context=/workspace/source
